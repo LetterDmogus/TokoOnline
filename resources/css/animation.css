@@ -1,0 +1,53 @@
+.portal-card {
+    cursor: pointer;
+}
+
+.portal-card:hover {
+    animation-name: jump;
+    animation-duration: 1s;
+    animation-iteration-count: infinite;
+    animation-timing-function: ease-in-out;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+}
+
+@keyframes jump {
+    0% {
+        transform: translateY(0);
+    }
+
+    50% {
+        transform: translateY(-5px);
+    }
+
+    100% {
+        transform: translateY(0);
+    }
+}
+
+body {
+    overflow-x: hidden;
+    padding-top: 70px;
+}
+
+#sidebar {
+    width: 250px;
+    left: 0;
+    transition: all 0.3s;
+}
+
+#sidebar.collapsed {
+    left: -250px;
+    overflow: hidden;
+}
+
+#content {
+    transition: margin-left 0.3s;
+}
+
+#content.expanded {
+    margin-left: 0;
+}
+
+#content.with-sidebar {
+    margin-left: 250px;
+}
