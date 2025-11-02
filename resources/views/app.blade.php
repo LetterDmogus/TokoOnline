@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" >
+<html lang="en">
 
 <head>
     <meta charset="UTF-8">
@@ -16,7 +16,7 @@
 
 </head>
 
-<body data-bs-theme="dark" class="bg-dark text-light">
+<body data-bs-theme="dark" class="bg-dark text-white">
     {{-- Include navbar --}}
     @if (!Request::is('login') || !Request::is('register'))
         @include('partial.navbar')
@@ -29,7 +29,8 @@
         @endif
 
         {{-- Main content area --}}
-        <main class="flex-grow-1 p-3">
+        <main id="mainContent" class="flex-grow-1 p-3 fade-in">
+            @include('partial.alert')
             @yield('content')
         </main>
     </div>
@@ -48,6 +49,9 @@
             content.classList.toggle("expanded");
             content.classList.toggle("with-sidebar");
         });
+    });
+    window.addEventListener('load', () => {
+        document.getElementById('mainContent').classList.add('showed');
     });
 </script>
 

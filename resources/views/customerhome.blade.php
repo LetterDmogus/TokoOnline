@@ -4,10 +4,9 @@
 
 @section('content')
     <div class="container mt-5 pt-4 text-white">
-
         <!-- Greeting -->
         <div class="mb-4">
-            <h2>Hello, {{ session('username') ?? 'Customer' }}</h2>
+            <h2>Hello, {{ $profile->name ?? 'Customer' }}</h2>
             <p class="text-secondary">Welcome back to your dashboard.</p>
         </div>
 
@@ -16,11 +15,18 @@
             <div class="col-md-4">
                 <div class="card bg-dark border-light">
                     <div class="card-body text-center d-flex flex-column align-items-center">
-                        <img src="{{ asset('storage/default-avatar.png') }}" alt="Profile" class="rounded-circle mb-3"
-                            width="80">
-                        <h5>{{ session('username') ?? 'AverageMember' }}</h5>
+                        @if (!empty($profile->profile_url))
+                            <img src="{{ asset('storage/' . $profile->profile_url) }}" alt="Image"
+                                class="rounded-circle mb-3" width="80">
+                        @else
+                            <img src="{{ asset('storage/images/Default.png') }}" alt="No Image" class="rounded-circle mb-3"
+                                width="80">
+                        @endif
+                        <h5>{{ $profile->name ?? 'Customer' }}</h5>
                         <p class="text-secondary mb-1">Member since 2025</p>
-                        <a href="#" class="btn btn-outline-light btn-sm mt-2">Edit Profile</a>
+                        <a href="/edit/customer/{{ Session('id') }}" class="btn btn-outline-primary">
+                            <i class="bi bi-pencil-square"></i> Edit
+                        </a>
                     </div>
                 </div>
             </div>
@@ -35,11 +41,11 @@
                                 <p class="text-secondary">Active Orders</p>
                             </div>
                             <div class="col-4">
-                                <h3>12</h3>
+                                <h3>{{ $cancelled_order->total_order }}</h3>
                                 <p class="text-secondary">Delivered</p>
                             </div>
                             <div class="col-4">
-                                <h3>5</h3>
+                                <h3>{{ $delivered_order->total_order }}</h3>
                                 <p class="text-secondary">Cancelled</p>
                             </div>
                         </div>
@@ -51,31 +57,31 @@
         <!-- Row 2: Quick Actions -->
         <div class="row text-center">
             <div class="col-md-4 mb-3">
-                <div class="card bg-primary text-white border-0">
+                <div class="card bg-dark text-white border border-primary">
                     <div class="card-body">
                         <i class="bi bi-cart4 display-6"></i>
                         <h5 class="mt-2">Shop Products</h5>
-                        <a href="/shop" class="btn btn-light btn-sm mt-2">Go</a>
+                        <a href="/product" class="btn btn-primary btn-sm mt-2">Go</a>
                     </div>
                 </div>
             </div>
 
             <div class="col-md-4 mb-3">
-                <div class="card bg-danger text-white border-0">
+                <div class="card bg-dark text-white border border-danger">
                     <div class="card-body">
                         <i class="bi bi-box-seam display-6"></i>
                         <h5 class="mt-2">My Orders</h5>
-                        <a href="/orders" class="btn btn-light btn-sm mt-2">View</a>
+                        <a href="/order" class="btn btn-danger btn-sm mt-2">View</a>
                     </div>
                 </div>
             </div>
 
             <div class="col-md-4 mb-3">
-                <div class="card bg-success text-white border-0">
+                <div class="card bg-dark text-white border border-success">
                     <div class="card-body">
                         <i class="bi bi-wallet2 display-6"></i>
                         <h5 class="mt-2">Payments</h5>
-                        <a href="/payments" class="btn btn-light btn-sm mt-2">Check</a>
+                        <a href="/payments" class="btn btn-success btn-sm mt-2">Check</a>
                     </div>
                 </div>
             </div>

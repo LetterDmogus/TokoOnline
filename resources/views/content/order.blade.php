@@ -4,24 +4,33 @@
 
 @section('content')
     <div class="container mt-4">
-        <h2 class="mb-3">Order Management</h2>
-        @if (session('success'))
-            <span class="text-success">{{session('success')}}</span>
-        @endif
         <form method="GET" action="{{ route('orders') }}" class="d-flex mb-3">
-            <select name="selectedorder" class="form-select me-2" onchange="this.form.submit()">
+            <select name="selectedstatus" class="form-select me-2" onchange="this.form.submit()">
                 <option value="">All Status</option>
-                @foreach ($orders as $role)
-                    <option value="{{ $role->id }}" {{ $role->id == $selectedrole ? 'selected' : '' }}>
-                        {{ $role->name }}
-                    </option>
-                @endforeach
+                <option value="Pending" {{ $selectedstatus == 'Pending' ? 'selected' : '' }}>
+                    Pending
+                </option>
+                <option value="Prepared" {{ $selectedstatus == 'Prepared' ? 'selected' : '' }}>
+                    Prepared
+                </option>
+                <option value="Completed" {{ $selectedstatus == 'Completed' ? 'selected' : '' }}>
+                    Completed
+                </option>
+                <option value="Cancelled" {{ $selectedstatus == 'Cancelled' ? 'selected' : '' }}>
+                    Cancelled
+                </option>
             </select>
 
-            <input type="text" name="search" value="{{ $search }}" placeholder="Search orders" class="form-control me-2">
+            <input type="text" name="search" value="{{ $search }}" placeholder="Search orders"
+                class="form-control me-2">
             <button type="submit" class="btn btn-primary">Search</button>
         </form>
-        <table class="table table-bordered table-hover align-middle">
+        @if (Session('role')== 3 || session('role') == 4)
+        <form method="GET" action="sales/report" class="d-flex mb-3">
+            <button type="submit" class="btn btn-primary">Generate Report</button>
+        </form>
+        @endif
+        <table class="table text-white table-bordered align-middle">
             <thead class="table-primary">
                 <tr>
                     <th scope="col">Customer</th>
@@ -32,16 +41,15 @@
                 </tr>
             </thead>
             <tbody>
-                @foreach($data as $row)
+                @foreach ($data as $row)
                     <tr>
-                        <td>{{$row->customername}}</td>
-                        <td>{{$row->status}}</td>
-                        <td>{{$row->total_price}}</td>
-                        <td>{{$row->created_at}}</td>
+                        <td>{{ $row->full_name }}</td>
+                        <td>{{ $row->status }}</td>
+                        <td>{{ $row->total_price }}</td>
+                        <td>{{ $row->created_at }}</td>
                         <td class="text-center">
-                            <a class="btn btn-sm btn-primary" href="/detail/{{$row->id}}">Details</a>
-                            <a class="btn btn-sm btn-danger" href="/delete/orders/{{$row->id}}">Delete</a>
-                        </td>
+                            <a class="btn btn-sm btn-outline-primary" href="/orders/detail/{{$row->id}}">Details</a>
+                            <a class="btn btn-sm btn-outline-danger" href="/delete/orders/{{$row->id}}">{{ session('role') == 1 ? 'Cancel' : 'Delete' }}</a>                        </td>
                     </tr>
                 @endforeach
             </tbody>

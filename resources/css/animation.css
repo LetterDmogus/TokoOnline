@@ -51,3 +51,95 @@ body {
 #content.with-sidebar {
     margin-left: 250px;
 }
+
+/* Step transitions */
+.step {
+    position: absolute;
+    width: 100%;
+    top: 0;
+    left: 0;
+    opacity: 0;
+    transform: translateX(100%);
+    transition: all 0.4s ease;
+}
+
+.step.active {
+    opacity: 1;
+    transform: translateX(0);
+    position: relative;
+}
+
+.slide-left {
+    animation: slideLeft 0.4s forwards;
+}
+
+.slide-in {
+    animation: slideIn 0.4s forwards;
+}
+
+.slide-right {
+    animation: slideRight 0.4s forwards;
+}
+
+.slide-back {
+    animation: slideBack 0.4s forwards;
+}
+
+@keyframes slideLeft {
+    from {
+        transform: translateX(0);
+        opacity: 1;
+    }
+
+    to {
+        transform: translateX(-100%);
+        opacity: 0;
+    }
+}
+
+@keyframes slideIn {
+    from {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+@keyframes slideRight {
+    from {
+        transform: translateX(0);
+        opacity: 1;
+    }
+
+    to {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+}
+
+@keyframes slideBack {
+    from {
+        transform: translateX(-100%);
+        opacity: 0;
+    }
+
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+.fade-in {
+    opacity: 0;
+    transform: translateY(10px);
+    transition: opacity 0.7s ease, transform 0.7s ease;
+}
+
+.fade-in.showed {
+    opacity: 1;
+    transform: translateY(0);
+}

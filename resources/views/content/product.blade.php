@@ -5,9 +5,6 @@
 @section('content')
     <div class="container mt-4">
         <h2 class="mb-3">Product Management</h2>
-        @if (session('success'))
-            <span class="text-success">{{session('success')}}</span>
-        @endif
         <a href="/monitor/category" class="mb-3 btn form-control btn-success">Monitor the categories!</a>
         <form method="GET" action="{{ route('products') }}" class="d-flex mb-3">
             <select name="category" class="form-select me-2" onchange="this.form.submit()">
@@ -45,7 +42,7 @@
                             <img src="{{ $row->image_url ? asset('storage/' . $row->image_url) : asset(path: 'storage/images/Default.png') }}"
                                 class="img-thumbnail" width="60" alt="product item">
                         </td>
-                        <td>{{$row->name}}</td>
+                        <td>{{$row->name}} &lt; {{ $row->stock }}&gt;</td>
                         <td>{{$row->description}}</td>
                         <td>&lt;{{$row->category}}&gt; {{$row->categoryname}}</td>
                         <td>${{$row->price}}</td>

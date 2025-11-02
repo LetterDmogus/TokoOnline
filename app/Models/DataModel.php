@@ -17,19 +17,19 @@ use DB;
 use Illuminate\Database\Eloquent\Model;
 
 class DataModel extends Model
-{
+{   
     function addLog($userId, $action, $details = null)
-{
-    DB::table('logs')->insert([
-        'user_id' => $userId,
-        'action' => $action,
-        'details' => $details,
-        'ip_address' => request()->ip(),
-        'created_at' => now(),
-        'updated_at' => now(),
-    ]);
-}
-    function getFilteredData($main, $joins = [], $where = [], $search = null, $searchColumns = [], $select = ['*'])
+    {
+        DB::table('logs')->insert([
+            'user_id' => $userId,
+            'action' => $action,
+            'details' => $details,
+            'ip_address' => request()->ip(),
+            'created_at' => now(),
+            'updated_at' => now(),
+        ]);
+    }
+    function getFilteredData($main, $joins = [], $where = [], $search = null, $searchColumns = [], $select = ['*'], $orderBy = null, $paginate = null)
     {
         $query = DB::table($main);
 
@@ -59,12 +59,19 @@ class DataModel extends Model
                 }
             });
         }
-
+        if ($orderBy) {
+            $query->orderBy($orderBy[0], $orderBy[1]);
+        }
+        if ($paginate) {
+            return $query->paginate($paginate);
+        }
         return $query->select($select)->get();
     }
 
 
-    function getJoinData($main, $joins = [], $select = ['*'], $where = null, $single = false)
+    function getJoinData($main, $joins = [], $select = ['*'], $where = null, $single = false, 
+                        $orderBy = null, $paginate = null,$startDate = null, $endDate = null,
+                        $dateColumn = 'created_at')
     {
         $query = DB::table($main);
 
@@ -81,6 +88,15 @@ class DataModel extends Model
 
         // Select columns
         $query->select($select);
+        if ($orderBy) {
+            $query->orderBy($orderBy[0], $orderBy[1]);
+        }
+        if ($paginate) {
+            return $query->paginate($paginate);
+        }
+        if ($startDate && $endDate) {
+            $query->whereBetween($dateColumn, [$startDate, $endDate]);
+        }
 
         // Return one or multiple records
         return $single ? $query->first() : $query->get();
@@ -89,15 +105,20 @@ class DataModel extends Model
     {
         return DB::table($table)->get();
     }
-    function getWhere($table, $where, $select = 1,$extra = null)
+    function getWhere($table, $where, $select = 1, $extra = null)
     {
-        $query = DB::table($table)->where($where);
+        $query = DB::table($table);
+        
+        foreach ($where as $key => $value) {
+            $query->where($key, $value);
+        }
+        
         if ($select == 1) {
             return $query->get()->first();
-        }elseif($select == 2){
+        } elseif ($select == 2) {
             return $query->get();
-        }else{
-            return $query->select(DB::raw('COUNT('.$extra[0].') as '.$extra[1]))->get()->first();
+        } else {
+            return $query->select(DB::raw('COUNT(' . $extra[0] . ') as ' . $extra[1]))->get()->first();
         }
 
     }
